@@ -210,7 +210,7 @@ def get_part(spec, source, dt, dp):
         if isinstance(dt, np.ndarray) and dt.size == 1:
             dt = float(dt.item())  # Convert numpy array to Python scalar
         # Convert tempo change from relative change (e.g., -0.12 for 88%) to percentage change expected by `repitch`
-        tempo_percentage_change = dt * 100  # Convert to percentage (e.g., -12 for 88% speed)
+        tempo_percentage_change = dt * 100  # Convert to percentage
         # Apply pitch and tempo changes
         wav = repitch(wav, dp, tempo_percentage_change, voice=source == 3, samplerate=SR)
         # Adjust onsets according to new tempo
