@@ -205,11 +205,17 @@ def find_candidate(spec_ref, catalog, pitch_match=True):
 def get_part(spec, source, dt, dp):
     """Apply given delta of tempo and delta of pitch to a stem."""
     wav = spec.track[source]
-    if dt or dp:
-        wav = repitch(wav, dp, dt * 100, samplerate=SR, voice=source == 3)
+    if dt != 0 or dp != 0:  # Check if there's any change to apply
+        # Ensure 'dt' is a scalar if it's an array
+        if isinstance(dt, np.ndarray) and dt.size == 1:
+            dt = float(dt.item())  # Convert numpy array to Python scalar
+        # Convert tempo change from relative change (e.g., -0.12 for 88%) to percentage change expected by `repitch`
+        tempo_percentage_change = dt * 100  # Convert to percentage
+        # Apply pitch and tempo changes
+        wav = repitch(wav, dp, tempo_percentage_change, voice=source == 3, samplerate=SR)
+        # Adjust onsets according to new tempo
         spec = spec._replace(onsets=spec.onsets / (1 + dt))
     return wav, spec
-
 
 def build_track(ref_index, catalog):
     """Given the reference track index and a catalog of track, builds

@@ -138,7 +138,7 @@ If you have anaconda installed, you can run from the root of this repository:
 conda env update -f environment-cpu.yml  # if you don't have GPUs
 conda env update -f environment-cuda.yml # if you have GPUs
 conda activate demucs
-pip install -e .
+pip install -e .[dev]
 ```
 
 This will create a `demucs` environment with all the dependencies installed.
